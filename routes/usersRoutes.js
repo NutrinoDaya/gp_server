@@ -30,6 +30,7 @@ router.route('/').get(async (req, res) => {
 
 
 // userType
+
 router.route('/register').post(async (req, res) => {
   const { username, email, password} = req.body;
   const encryptedPassword = await bcrypt.hash(password, 10);
