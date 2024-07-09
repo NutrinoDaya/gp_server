@@ -33,6 +33,10 @@ router.route('/').get(async (req, res) => {
 
 router.route('/register').post(async (req, res) => {
   const { username, email, password} = req.body;
+  console.log("username : " , username)
+  console.log("email : " , email)
+  console.log("password : " , password)
+
   const encryptedPassword = await bcrypt.hash(password, 10);
   try {
     const oldUser = await User.findOne({ email });
