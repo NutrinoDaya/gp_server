@@ -233,15 +233,15 @@ router.route('/resend-verification').post(async (req,res) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail', // Replace with your email service (e.g., 'Gmail')
       auth: {
-        user: 'LearningRealm@gmail.com', // Replace with your email address
-        pass: 'fibl qsix wcvy vmbo', // Replace with your email password
+        user: 'learningrealm1@gmail.com', // Replace with your email address
+        pass: 'gnwk uilg umpc biml', // App Password
       },
     });
 
     // Send a verification email
     const verificationLink = `https://build-seven-self.vercel.app/verification?token=${token}`;
     const mailOptions = {
-      from: 'LearningRealm@gmail.com',
+      from: 'learningrealm1@gmail.com',
       to: email,
       subject: 'Account Verification',
       html: `
