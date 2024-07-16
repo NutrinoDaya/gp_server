@@ -60,7 +60,7 @@ router.route('/register').post(async (req, res) => {
     });
 
     // Send a verification email
-    const verificationLink = `https://build-seven-self.vercel.app/verification?token=${token}`;
+    const verificationLink = `https://learning-realm.vercel.app/verification?token=${token}`;
     const mailOptions = {
       from: 'LearningRealm@gmail.com',
       to: email,
