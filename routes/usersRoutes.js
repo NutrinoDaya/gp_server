@@ -55,7 +55,7 @@ router.route('/register').post(async (req, res) => {
       service: 'Gmail', // Replace with your email service (e.g., 'Gmail')
       auth: {
         user: 'learningrealm1@gmail.com', // Replace with your email address
-        pass: 'fibl qsix wcvy vmbo', // Replace with your email password
+        pass: 'gnwk uilg umpc biml', // Replace with your email password
       },
     });
 
