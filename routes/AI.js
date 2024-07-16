@@ -1,7 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
 // import {v2 as cloudinary} from 'cloudinary'
-import Image from '../mongodb/models/image.js';
+import Image from '../mongodb/models/savedData.js';
 import fetch from "node-fetch";
 
 dotenv.config();

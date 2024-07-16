@@ -10,6 +10,7 @@ import userDetails from '../mongodb/models/userDetails.js'
 import token from '../mongodb/models/token.js'
 import  nodemailer from 'nodemailer';
 import crypto  from 'crypto';
+import savedDataSchema from './models/SavedData'; 
 
 const User = userDetails
 const Images = userImageDetails
@@ -161,16 +162,29 @@ router.route('/register').post(async (req, res) => {
       }
     });
 
-    // Create the user (you may want to move this to after email is sent successfully)
+
     await User.create({
       username,
       email,
       password: encryptedPassword,
     });
 
-    // userType,
-    // isVerified: false, // Add a flag to track user verification status
-    // Check your email for verification instructions.' 
+    try {
+
+      // Create corresponding saved data record
+      const newSavedData = new savedDataSchema({
+          photo,
+          username,
+          userId: newUser._id,
+          summaries: [],
+          quizzes: [],
+          flashcards: [],
+          audios: []
+      });
+      await newSavedData.save();
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
     res.json({ status: "ok", message: 'Registration successful. '});
   } catch (error) {
     console.error(error);
@@ -178,10 +192,12 @@ router.route('/register').post(async (req, res) => {
   }
 });
 
+
 router.route('/verify/:token').get(async (req, res) => {
+
   const { token } = req.params;
-  // Check if the email associated with the token exists in your tokensDB map
-  // const newToken = new Token({ email, token });
+  
+
   const allData = await Token.find({ });
   console.log(allData);
   const tokenRecord = await Token.findOne({ token:token });
@@ -456,43 +472,48 @@ router.route('/ImageUserData').post(async (req, res) => {
 });
 
 router.route('/forgot-password').post(async (req, res) => {
-    const { email } = req.body;
-    try {
+  const { email } = req.body;
+  try {
       const oldUser = await User.findOne({ email });
       if (!oldUser) {
-        return res.json({ status: "User Not Exists!!" });
+          return res.status(404).json({ status: "User Doesn't Exist!" });
       }
       const secret = JWT_SECRET + oldUser.password;
       const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-        expiresIn: "6d",
+          expiresIn: "6d",
       });
-      const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
+      const link = `https://build-seven-self.vercel.app/reset-password/${oldUser._id}/${token}`;
+
       var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "adarsh438tcsckandivali@gmail.com",
-          pass: "rmdklolcsmswvyfw",
-        },
+          service: "gmail",
+          auth: {
+              user: "adarsh438tcsckandivali@gmail.com",
+              pass: "rmdklolcsmswvyfw",
+          },
       });
-  
+
       var mailOptions = {
-        from: "youremail@gmail.com",
-        to: "thedebugarena@gmail.com",
-        subject: "Password Reset",
-        text: link,
+          from: "youremail@gmail.com",
+          to: email,
+          subject: "Password Reset",
+          text: link,
       };
-  
+
       transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          // console.log("Email sent: " + info.response);
-        }
+          if (error) {
+              console.log(error);
+              return res.status(500).json({ status: "Error sending email" });
+          } else {
+              console.log("Email sent: " + info.response);
+              return res.status(200).json({ status: "Email sent successfully" });
+          }
       });
-      // console.log(link);
-    } catch (error) { }
-  });
-  
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ status: "Internal Server Error" });
+  }
+});
+
   router.route('/reset-password/:id/:token').get(async (req, res) => {
     const { id, token } = req.params;
     // console.log(req.params);

@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './mongodb/connect.js';
 import AI from './routes/AI.js';
-import ImagesRoutes from './routes/ImagesRoutes.js'
+import saved from './routes/saved.js'
 import usersRoutes from './routes/usersRoutes.js'
 
 dotenv.config();
@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 
 app.use('/api/AI', AI);
-app.use('/api/Images',ImagesRoutes)
+app.use('/api/saved',saved)
 app.use('/api/Users',usersRoutes)
 
 app.get('/', async (req, res) => {
