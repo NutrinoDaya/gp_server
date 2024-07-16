@@ -54,7 +54,7 @@ router.route('/register').post(async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail', // Replace with your email service (e.g., 'Gmail')
       auth: {
-        user: 'LearningRealm@gmail.com', // Replace with your email address
+        user: 'learningrealm1@gmail.com', // Replace with your email address
         pass: 'fibl qsix wcvy vmbo', // Replace with your email password
       },
     });
