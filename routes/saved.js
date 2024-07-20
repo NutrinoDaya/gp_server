@@ -1,6 +1,6 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import SavedData from '../mongodb/models/SavedData'
+import SavedData from '../mongodb/models/savedData.js'
 
 dotenv.config();
 

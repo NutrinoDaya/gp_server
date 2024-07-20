@@ -10,7 +10,7 @@ import userDetails from '../mongodb/models/userDetails.js'
 import token from '../mongodb/models/token.js'
 import  nodemailer from 'nodemailer';
 import crypto  from 'crypto';
-import SavedData from '../mongodb/models/SavedData.js'
+import SavedData from '../mongodb/models/savedData.js'
 const User = userDetails
 const Images = userImageDetails
 const Token = token
