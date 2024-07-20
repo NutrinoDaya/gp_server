@@ -81,49 +81,46 @@ router.route('/audios').get(async (req, res) => {
   }
 });
 
+
 // Route to store summaries
 router.route('/summaries').post(async (req, res) => {
     try {
-      // Extract token from Authorization header
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'No token provided' });
-      }
-  
-      const token = authHeader.split(' ')[1];
-  
-      // Verify and decode the token
-      let decoded;
-      try {
-        decoded = jwt.verify(token, JWT_SECRET);
-      } catch (err) {
-        return res.status(401).json({ success: false, message: 'Invalid or expired token' });
-      }
-  
-      // Retrieve the user using the email from the decoded token
-      const user = await User.findOne({ email: decoded.email });
-      if (!user) {
-        return res.status(404).json({ success: false, message: 'User not found' });
-      }
-  
-      // Retrieve the userId
-      const userId = user._id;
-  
-      // Retrieve the summaries from the request body
-      const { summaries } = req.body;
-  
-      // Update or create the SavedData record
-      const data = await SavedData.findOneAndUpdate(
-        { userId },
-        { $set: { summaries } },
-        { new: true, upsert: true }
-      );
-  
-      // Send success response
-      res.status(200).json({ success: true, data });
+        // Extract token from request body
+        const { token, summaries } = req.body;
+
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'No token provided' });
+        }
+
+        // Verify and decode the token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, JWT_SECRET);
+        } catch (err) {
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+        }
+
+        // Retrieve the user using the email from the decoded token
+        const user = await User.findOne({ email: decoded.email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Retrieve the userId
+        const userId = user._id;
+
+        // Update or create the SavedData record
+        const data = await SavedData.findOneAndUpdate(
+            { userId },
+            { $set: { summaries } },
+            { new: true, upsert: true }
+        );
+
+        // Send success response
+        res.status(200).json({ success: true, data });
     } catch (err) {
-      console.error('Error storing summaries:', err);
-      res.status(500).json({ success: false, message: 'Storing summaries failed, please try again' });
+        console.error('Error storing summaries:', err);
+        res.status(500).json({ success: false, message: 'Storing summaries failed, please try again' });
     }
 });
 
