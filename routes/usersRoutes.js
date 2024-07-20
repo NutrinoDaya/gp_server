@@ -405,21 +405,16 @@ router.route('/login').post(async (req, res) => {
       const token = jwt.sign({ email: user.email }, JWT_SECRET, {
         expiresIn: "5d",
       });
-      console.log('Generated JWT token:', token);
 
       if (user.isVerified) {
-        console.log('User is verified');
         return res.json({ status: "ok", data: token });
       } else {
-        console.log('User email not verified');
-        return res.json({ error: "Email Not Verified" });
+        return res.json({ status : "error", error: "Email Not Verified" });
       }
     } catch (err) {
-      console.error('Error creating JWT token:', err);
       return res.status(500).json({ status: "error", error: "Token generation failed" });
     }
   } else {
-    console.log('Invalid password for user:', user.email);
     return res.json({ status: "error", error: "Invalid Password" });
   }
 });
