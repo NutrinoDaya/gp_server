@@ -105,7 +105,7 @@ router.route('/summaries').post(async (req, res) => {
         }
 
         // Retrieve the user using the email from the decoded token
-        const user = await User.findOne({ email: decoded.email });
+        const user = await userDetails.findOne({ email: decoded.email });
         if (!user) {
             console.log('User not found for email:', decoded.email);
             return res.status(404).json({ success: false, message: 'User not found' });
