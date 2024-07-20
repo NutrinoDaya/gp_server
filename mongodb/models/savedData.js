@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const savedData = new mongoose.Schema(
+const SavedData = new mongoose.Schema(
     {
         username: { type: String, required: true },
         userId: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -26,5 +26,5 @@ const savedData = new mongoose.Schema(
     }
 );
 
-const savedDataSchema = mongoose.model('savedData', savedData);
-export default savedDataSchema;
+const SavedDataSchema = mongoose.model('SavedData', SavedData);
+export default SavedDataSchema;
