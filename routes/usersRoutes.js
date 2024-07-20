@@ -162,14 +162,14 @@ router.route('/register').post(async (req, res) => {
     });
 
 
-    await User.create({
+    // Create a new user
+    const newUser = await User.create({
       username,
       email,
       password: encryptedPassword,
     });
 
     try {
-
       // Create corresponding saved data record
       const newSavedData = new SavedData({
           username,
@@ -188,6 +188,7 @@ router.route('/register').post(async (req, res) => {
     console.error(error);
     res.status(500).json({ status: "error", message: 'Failed to register user' });
   }
+
 });
 
 
