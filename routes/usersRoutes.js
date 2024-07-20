@@ -250,7 +250,7 @@ router.route('/resend-verification').post(async (req,res) => {
     });
 
     // Send a verification email
-    const verificationLink = `https://build-seven-self.vercel.app/verification?token=${token}`;
+    const verificationLink = `https://learning-realm.vercel.app/verification?token=${token}`;
     const mailOptions = {
       from: 'learningrealm1@gmail.com',
       to: email,
@@ -495,7 +495,7 @@ router.route('/forgot-password').post(async (req, res) => {
       const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
           expiresIn: "6d",
       });
-      const link = `https://build-seven-self.vercel.app/reset-password/${oldUser._id}/${token}`;
+      const link = `https://learning-realm.vercel.app/reset-password/${oldUser._id}/${token}`;
 
       var transporter = nodemailer.createTransport({
           service: "gmail",

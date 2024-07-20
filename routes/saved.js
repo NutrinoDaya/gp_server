@@ -59,7 +59,7 @@ router.route('/userData').post(async (req, res) => {
 });
 
 // Route to retrieve summaries
-router.route('/summaries').post(async (req, res) => {
+router.route('/get_summaries').post(async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -82,7 +82,7 @@ router.route('/summaries').post(async (req, res) => {
 });
 
 // Route to retrieve quizzes
-router.route('/quizzes').post(async (req, res) => {
+router.route('/get_quizzes').post(async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -105,7 +105,7 @@ router.route('/quizzes').post(async (req, res) => {
 });
 
 // Route to retrieve flashcards
-router.route('/flashcards').post(async (req, res) => {
+router.route('/get_flashcards').post(async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -128,7 +128,7 @@ router.route('/flashcards').post(async (req, res) => {
 });
 
 // Route to retrieve audios
-router.route('/audios').post(async (req, res) => {
+router.route('/get_audios').post(async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -257,5 +257,57 @@ router.route('/audios').post(async (req, res) => {
     res.status(500).json({ success: false, message: 'Storing audios failed, please try again' });
   }
 });
+
+
+
+// Route to retrieve questions
+router.route('/get_questions').post(async (req, res) => {
+    try {
+      const { token } = req.body;
+  
+      if (!token) {
+        return res.status(401).json({ success: false, message: 'No token provided' });
+      }
+  
+      const user = await verifyTokenAndGetUser(token);
+      const data = await SavedData.findOne({ userId: user._id }, 'questions');
+  
+      if (data) {
+        res.status(200).json({ success: true, questions: data.questions });
+      } else {
+        res.status(404).json({ success: false, message: 'No data found for the given user ID' });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: 'Fetching questions failed, please try again' });
+    }
+  });
+
+// Route to store questions
+router.route('/questions').post(async (req, res) => {
+    try {
+      const { token, questions } = req.body;
+  
+      if (!token) {
+        console.log('No token provided');
+        return res.status(401).json({ success: false, message: 'No token provided' });
+      }
+  
+      const user = await verifyTokenAndGetUser(token);
+      const userId = user._id;
+  
+      const data = await SavedData.findOneAndUpdate(
+        { userId },
+        { $set: { questions } },
+        { new: true, upsert: true }
+      );
+      console.log('Updated or created SavedData record:', data);
+  
+      res.status(200).json({ success: true, data });
+    } catch (err) {
+      console.error('Error storing questions:', err);
+      res.status(500).json({ success: false, message: 'Storing questions failed, please try again' });
+    }
+  });
 
 export default router;
