@@ -35,6 +35,30 @@ router.route('/').get(async (req, res) => {
   }
 });
 
+
+// Route to retrieve all savedData for a specific user by token
+router.route('/userData').post(async (req, res) => {
+    try {
+      const { token } = req.body;
+  
+      if (!token) {
+        return res.status(401).json({ success: false, message: 'No token provided' });
+      }
+  
+      const user = await verifyTokenAndGetUser(token);
+      const data = await SavedData.findOne({ userId: user._id });
+  
+      if (data) {
+        res.status(200).json({ success: true, data });
+      } else {
+        res.status(404).json({ success: false, message: 'No data found for the given user ID' });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: 'Fetching data failed, please try again' });
+    }
+  });
+
 // Route to retrieve summaries
 router.route('/summaries').get(async (req, res) => {
   try {
