@@ -172,7 +172,6 @@ router.route('/register').post(async (req, res) => {
 
       // Create corresponding saved data record
       const newSavedData = new SavedData({
-          photo,
           username,
           userId: newUser._id,
           summaries: [],
