@@ -1,7 +1,7 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import SavedData from '../mongodb/models/savedData.js';
+import SavedData from '../mongodb/models/SavedData.js';
 
 dotenv.config();
 
