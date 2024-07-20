@@ -1,7 +1,6 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
 // import {v2 as cloudinary} from 'cloudinary'
-import Image from '../mongodb/models/SavedData.js';
 import fetch from "node-fetch";
 
 dotenv.config();
@@ -44,21 +43,21 @@ const router = express.Router();
   })
 
   
-  router.route('/upload').post(async(req,res) => {
-   const {photo,username,userId} = req.body
-    // console.log(req.body);
-   try {
-    await Image.create({
-      photo: photo,
-      username,
-      userId
-    });
-    res.status(200).json({ success: true});
-   } catch (error) {
-    console.log(error)
-    res.status(500).json({ success: false, message: 'Unable to upload the image, please try again' });
-   }
-  
+  // router.route('/upload').post(async(req,res) => {
+  //     const {photo,username,userId} = req.body
+  //       // console.log(req.body);
+  //     try {
+  //       await Image.create({
+  //         photo: photo,
+  //         username,
+  //         userId
+  //       });
+  //       res.status(200).json({ success: true});
+  //     } catch (error) {
+  //       console.log(error)
+  //       res.status(500).json({ success: false, message: 'Unable to upload the image, please try again' });
+  //     }
       
-  })
+          
+  //     })
   export default router

@@ -10,8 +10,7 @@ import userDetails from '../mongodb/models/userDetails.js'
 import token from '../mongodb/models/token.js'
 import  nodemailer from 'nodemailer';
 import crypto  from 'crypto';
-import savedDataSchema from './models/SavedData'; 
-
+import SavedData from '../mongodb/models/SavedData.js'
 const User = userDetails
 const Images = userImageDetails
 const Token = token
@@ -172,7 +171,7 @@ router.route('/register').post(async (req, res) => {
     try {
 
       // Create corresponding saved data record
-      const newSavedData = new savedDataSchema({
+      const newSavedData = new SavedData({
           photo,
           username,
           userId: newUser._id,

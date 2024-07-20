@@ -22,7 +22,7 @@ const SavedData = new mongoose.Schema(
         audios: { type: [String], default: [] }
     },
     {
-        collection: 'savedData',
+        collection: 'SavedData',
     }
 );
 
