@@ -1,7 +1,7 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import SavedData from '../mongodb/models/savedData.js'
-
+import userDetails from '../mongodb/models/userDetails.js'
 dotenv.config();
 
 const router = express.Router();
@@ -85,10 +85,12 @@ router.route('/audios').get(async (req, res) => {
 // Route to store summaries
 router.route('/summaries').post(async (req, res) => {
     try {
-        // Extract token from request body
+        // Extract token and summaries from request body
         const { token, summaries } = req.body;
+        console.log('Request body:', req.body);
 
         if (!token) {
+            console.log('No token provided');
             return res.status(401).json({ success: false, message: 'No token provided' });
         }
 
@@ -96,18 +98,23 @@ router.route('/summaries').post(async (req, res) => {
         let decoded;
         try {
             decoded = jwt.verify(token, JWT_SECRET);
+            console.log('Decoded token:', decoded);
         } catch (err) {
+            console.error('Error verifying token:', err);
             return res.status(401).json({ success: false, message: 'Invalid or expired token' });
         }
 
         // Retrieve the user using the email from the decoded token
         const user = await User.findOne({ email: decoded.email });
         if (!user) {
+            console.log('User not found for email:', decoded.email);
             return res.status(404).json({ success: false, message: 'User not found' });
         }
+        console.log('User found:', user);
 
         // Retrieve the userId
         const userId = user._id;
+        console.log('UserId:', userId);
 
         // Update or create the SavedData record
         const data = await SavedData.findOneAndUpdate(
@@ -115,6 +122,7 @@ router.route('/summaries').post(async (req, res) => {
             { $set: { summaries } },
             { new: true, upsert: true }
         );
+        console.log('Updated or created SavedData record:', data);
 
         // Send success response
         res.status(200).json({ success: true, data });
