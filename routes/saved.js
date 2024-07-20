@@ -6,6 +6,9 @@ dotenv.config();
 
 const router = express.Router();
 
+const JWT_SECRET =
+  "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
+
 // Route to retrieve all savedData
 router.route('/').get(async (req, res) => {
   try {
