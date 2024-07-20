@@ -35,39 +35,45 @@ router.route('/').get(async (req, res) => {
   }
 });
 
-
 // Route to retrieve all savedData for a specific user by token
 router.route('/userData').post(async (req, res) => {
-    try {
-      const { token } = req.body;
-  
-      if (!token) {
-        return res.status(401).json({ success: false, message: 'No token provided' });
-      }
-  
-      const user = await verifyTokenAndGetUser(token);
-      const data = await SavedData.findOne({ userId: user._id });
-  
-      if (data) {
-        res.status(200).json({ success: true, data });
-      } else {
-        res.status(404).json({ success: false, message: 'No data found for the given user ID' });
-      }
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ success: false, message: 'Fetching data failed, please try again' });
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
     }
-  });
+
+    const user = await verifyTokenAndGetUser(token);
+    const data = await SavedData.findOne({ userId: user._id });
+
+    if (data) {
+      res.status(200).json({ success: true, data });
+    } else {
+      res.status(404).json({ success: false, message: 'No data found for the given user ID' });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: 'Fetching data failed, please try again' });
+  }
+});
 
 // Route to retrieve summaries
-router.route('/summaries').get(async (req, res) => {
+router.route('/summaries').post(async (req, res) => {
   try {
-    const { username } = req.query;
-    const data = await SavedData.findOne({ username }, 'summaries');
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+
+    const user = await verifyTokenAndGetUser(token);
+    const data = await SavedData.findOne({ userId: user._id }, 'summaries');
+
     if (data) {
       res.status(200).json({ success: true, summaries: data.summaries });
     } else {
-      res.status(404).json({ success: false, message: 'No data found for the given username' });
+      res.status(404).json({ success: false, message: 'No data found for the given user ID' });
     }
   } catch (err) {
     console.log(err);
@@ -76,14 +82,21 @@ router.route('/summaries').get(async (req, res) => {
 });
 
 // Route to retrieve quizzes
-router.route('/quizzes').get(async (req, res) => {
+router.route('/quizzes').post(async (req, res) => {
   try {
-    const { username } = req.query;
-    const data = await SavedData.findOne({ username }, 'quizzes');
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+
+    const user = await verifyTokenAndGetUser(token);
+    const data = await SavedData.findOne({ userId: user._id }, 'quizzes');
+
     if (data) {
       res.status(200).json({ success: true, quizzes: data.quizzes });
     } else {
-      res.status(404).json({ success: false, message: 'No data found for the given username' });
+      res.status(404).json({ success: false, message: 'No data found for the given user ID' });
     }
   } catch (err) {
     console.log(err);
@@ -92,14 +105,21 @@ router.route('/quizzes').get(async (req, res) => {
 });
 
 // Route to retrieve flashcards
-router.route('/flashcards').get(async (req, res) => {
+router.route('/flashcards').post(async (req, res) => {
   try {
-    const { username } = req.query;
-    const data = await SavedData.findOne({ username }, 'flashcards');
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+
+    const user = await verifyTokenAndGetUser(token);
+    const data = await SavedData.findOne({ userId: user._id }, 'flashcards');
+
     if (data) {
       res.status(200).json({ success: true, flashcards: data.flashcards });
     } else {
-      res.status(404).json({ success: false, message: 'No data found for the given username' });
+      res.status(404).json({ success: false, message: 'No data found for the given user ID' });
     }
   } catch (err) {
     console.log(err);
@@ -108,14 +128,21 @@ router.route('/flashcards').get(async (req, res) => {
 });
 
 // Route to retrieve audios
-router.route('/audios').get(async (req, res) => {
+router.route('/audios').post(async (req, res) => {
   try {
-    const { username } = req.query;
-    const data = await SavedData.findOne({ username }, 'audios');
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+
+    const user = await verifyTokenAndGetUser(token);
+    const data = await SavedData.findOne({ userId: user._id }, 'audios');
+
     if (data) {
       res.status(200).json({ success: true, audios: data.audios });
     } else {
-      res.status(404).json({ success: false, message: 'No data found for the given username' });
+      res.status(404).json({ success: false, message: 'No data found for the given user ID' });
     }
   } catch (err) {
     console.log(err);
@@ -127,7 +154,6 @@ router.route('/audios').get(async (req, res) => {
 router.route('/summaries').post(async (req, res) => {
   try {
     const { token, summaries } = req.body;
-    console.log('Request body:', req.body);
 
     if (!token) {
       console.log('No token provided');
@@ -155,7 +181,6 @@ router.route('/summaries').post(async (req, res) => {
 router.route('/quizzes').post(async (req, res) => {
   try {
     const { token, quizzes } = req.body;
-    console.log('Request body:', req.body);
 
     if (!token) {
       console.log('No token provided');
@@ -183,7 +208,6 @@ router.route('/quizzes').post(async (req, res) => {
 router.route('/flashcards').post(async (req, res) => {
   try {
     const { token, flashcards } = req.body;
-    console.log('Request body:', req.body);
 
     if (!token) {
       console.log('No token provided');
@@ -211,7 +235,6 @@ router.route('/flashcards').post(async (req, res) => {
 router.route('/audios').post(async (req, res) => {
   try {
     const { token, audios } = req.body;
-    console.log('Request body:', req.body);
 
     if (!token) {
       console.log('No token provided');

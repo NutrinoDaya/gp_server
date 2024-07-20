@@ -1,34 +1,47 @@
 import mongoose from 'mongoose';
 
 const SavedData = new mongoose.Schema(
-    {
-        username: { type: String, required: true },
-        userId: { type: mongoose.Schema.Types.ObjectId, required: true },
-        questions: [
-            {
-                question: { type: String, required: true },
-                answer: { type: String, required: true }
-            }
-        ],
-        summaries: { type: [String], default: [] },
-        quizzes: [
-            {
-                question: { type: String, required: true },
-                answer: { type: String, required: true },
-                distractors: { type: [String], required: true }
-            }
-        ],
-        flashcards: [
-            {
-                word: { type: String, required: true },
-                meaning: { type: String, required: true }
-            }
-        ],
-        audios: { type: [String], default: [] }
-    },
-    {
-        collection: 'SavedData',
-    }
+  {
+    username: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    questions: [
+      {
+        question: { type: String, required: true },
+        answer: { type: String, required: true },
+        shared: { type: Boolean, default: false }
+      }
+    ],
+    summaries: [
+      {
+        text: { type: String, required: true },
+        shared: { type: Boolean, default: false }
+      }
+    ],
+    quizzes: [
+      {
+        question: { type: String, required: true },
+        answer: { type: String, required: true },
+        distractors: { type: [String], required: true },
+        shared: { type: Boolean, default: false }
+      }
+    ],
+    flashcards: [
+      {
+        word: { type: String, required: true },
+        meaning: { type: String, required: true },
+        shared: { type: Boolean, default: false }
+      }
+    ],
+    audios: [
+      {
+        url: { type: String, required: true },
+        shared: { type: Boolean, default: false }
+      }
+    ]
+  },
+  {
+    collection: 'SavedData',
+  }
 );
 
 const SavedDataSchema = mongoose.model('SavedData', SavedData);
