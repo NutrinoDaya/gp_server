@@ -2,7 +2,6 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import SavedData from '../mongodb/models/savedData.js';
-import User from '../mongodb/models/User.js'; // Make sure to import your User model
 
 dotenv.config();
 
