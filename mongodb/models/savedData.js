@@ -4,7 +4,12 @@ const SavedData = new mongoose.Schema(
     {
         username: { type: String, required: true },
         userId: { type: mongoose.Schema.Types.ObjectId, required: true },
-        questions: { type: [String], default: [] },
+        questions: [
+            {
+                question: { type: String, required: true },
+                answer: { type: String, required: true }
+            }
+        ],
         summaries: { type: [String], default: [] },
         quizzes: [
             {
