@@ -88,10 +88,16 @@ router.route('/audios').get(async (req, res) => {
 // Route to store summaries
 router.route('/summaries').post(async (req, res) => {
     try {
-        // Extract token and summaries from request body
+        try {
+             // Extract token and summaries from request body
         const { token, summaries } = req.body;
-        console.log('Request body:', req.body);
+        console.log('token ', token);
+        console.log('summaries ',summaries);
 
+        } catch (error) {
+            console.log("error extracting data from the req.body ")
+        }
+       
         if (!token) {
             console.log('No token provided');
             return res.status(401).json({ success: false, message: 'No token provided' });
