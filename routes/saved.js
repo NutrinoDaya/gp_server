@@ -96,21 +96,24 @@ router.route('/summaries').post(async (req, res) => {
             console.log('No token provided');
             return res.status(401).json({ success: false, message: 'No token provided' });
         }
+        console.log("recieved token : " , token )
+        console.log(" JWT_SECRET : " , JWT_SECRET )
 
         // Verify and decode the token
-        let decoded;
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-            console.log('Decoded token:', decoded);
-        } catch (err) {
-            console.error('Error verifying token:', err);
-            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+        const userToken = jwt.verify(token, JWT_SECRET, (err, res) => {
+            if (err) {
+              return "token expired";
+            }
+            return res;
+          });
+          // console.log(user);
+          if (user == "token expired") {
+            return res.send({ status: "error", data: "token expired" });
         }
-
         // Retrieve the user using the email from the decoded token
-        const user = await userDetails.findOne({ email: decoded.email });
+        const user = await userDetails.findOne({ email: userToken.email });
         if (!user) {
-            console.log('User not found for email:', decoded.email);
+            console.log('User not found for email:', userToken.email);
             return res.status(404).json({ success: false, message: 'User not found' });
         }
         console.log('User found:', user);
