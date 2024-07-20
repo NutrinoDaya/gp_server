@@ -166,10 +166,20 @@ router.route('/summaries').post(async (req, res) => {
 
     const user = await verifyTokenAndGetUser(token);
     const userId = user._id;
-    console.log("summaries : "  , summaries)
+
+    // Convert summaries array from strings to objects if necessary
+    const formattedSummaries = summaries.map(summary => {
+      if (typeof summary === 'string') {
+        return { text: summary, shared: false }; // default shared to false if not provided
+      }
+      return summary;
+    });
+
+    console.log("formattedSummaries : "  , formattedSummaries)
+    
     const data = await SavedData.findOneAndUpdate(
       { userId },
-      { $set: { summaries } },
+      { $set: { summaries: formattedSummaries } },
       { new: true, upsert: true }
     );
     console.log('Updated or created SavedData record:', data);
@@ -180,6 +190,7 @@ router.route('/summaries').post(async (req, res) => {
     res.status(500).json({ success: false, message: 'Storing summaries failed, please try again' });
   }
 });
+
 
 // Route to store quizzes
 router.route('/quizzes').post(async (req, res) => {
