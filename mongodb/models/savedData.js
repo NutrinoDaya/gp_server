@@ -14,7 +14,7 @@ const SavedData = new mongoose.Schema(
     summaries: [
       {
         text: { type: String, required: true },
-        shared: { type: Boolean, default: false }
+        shared: { type: Boolean, default: false } // shared is now optional with a default value
       }
     ],
     quizzes: [

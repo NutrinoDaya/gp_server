@@ -8,13 +8,15 @@ dotenv.config();
 
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
-
+const JWT_SECRET =
+  "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
 // Helper function to verify token and get user
 const verifyTokenAndGetUser = async (token) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    console.log("decoded : " , decoded )
     const user = await userDetails.findOne({ email: decoded.email });
+    console.log("user : " , user )
     if (!user) {
       throw new Error('User not found');
     }
@@ -154,6 +156,8 @@ router.route('/get_audios').post(async (req, res) => {
 router.route('/summaries').post(async (req, res) => {
   try {
     const { token, summaries } = req.body;
+    console.log("token : "  , token)
+    console.log("summaries : "  , summaries)
 
     if (!token) {
       console.log('No token provided');
@@ -162,7 +166,7 @@ router.route('/summaries').post(async (req, res) => {
 
     const user = await verifyTokenAndGetUser(token);
     const userId = user._id;
-
+    console.log("summaries : "  , summaries)
     const data = await SavedData.findOneAndUpdate(
       { userId },
       { $set: { summaries } },
