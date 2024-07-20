@@ -385,26 +385,45 @@ router.route('/update-user-profile-image').post(async (req, res) => {
 router.route('/login').post(async (req, res) => {
   const { email, password } = req.body;
 
+  console.log('Received login request:', { email, password });
+
+  // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
+    console.log('User not found:', email);
     return res.json({ error: "User Not found" });
   }
-  if (await bcrypt.compare(password, user.password)) {
-    // expiration time for the token
-    const token = jwt.sign({ email: user.email }, JWT_SECRET, {
-      expiresIn: "5d",
-    });
+  console.log('User found:', user.email);
 
-    if (res.status(201)) {
-        if(user.isVerified){
-          return res.json({ status: "ok", data: token });
-        }else{
-          return res.json({ error: "Email Not Verified" });
-        }
+  // Compare password
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  console.log('Password valid:', isPasswordValid);
+
+  if (isPasswordValid) {
+    // Create JWT token
+    try {
+      const token = jwt.sign({ email: user.email }, JWT_SECRET, {
+        expiresIn: "5d",
+      });
+      console.log('Generated JWT token:', token);
+
+      if (user.isVerified) {
+        console.log('User is verified');
+        return res.json({ status: "ok", data: token });
+      } else {
+        console.log('User email not verified');
+        return res.json({ error: "Email Not Verified" });
+      }
+    } catch (err) {
+      console.error('Error creating JWT token:', err);
+      return res.status(500).json({ status: "error", error: "Token generation failed" });
     }
+  } else {
+    console.log('Invalid password for user:', user.email);
+    return res.json({ status: "error", error: "Invalid Password" });
   }
-  res.json({ status: "error", error: "Invalid Password" });
 });
+
 
 // Route to get user data
 router.route('/userData').post(async (req, res) => {
