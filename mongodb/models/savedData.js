@@ -18,12 +18,14 @@ const SavedData = new mongoose.Schema(
       }
     ],
     quizzes: [
-      {
-        question: { type: String, required: true },
-        answer: { type: String, required: true },
-        distractors: { type: [String], required: true },
-        shared: { type: Boolean, default: false }
-      }
+    [
+        {
+          question: { type: String, required: true },
+          answer: { type: String, required: true },
+          distractors: { type: [String], required: true },
+          shared: { type: Boolean, default: false }
+        }
+    ]
     ],
     flashcards: [
       {
